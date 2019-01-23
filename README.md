@@ -1,4 +1,4 @@
-# Stroken Module Bitcoin
+# Bitcoin Sevices
 
 ## Install Bitcoin node
 https://degreesofzero.com/article/building-bitcoind-from-source-on-ubuntu.html  
