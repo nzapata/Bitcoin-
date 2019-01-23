@@ -1,0 +1,29 @@
+Cron Short Documentation
+
+- Path 
+/utils/cronUtils.js
+
+WORKFLOW
+1) update accounts.
+- function: updateAccounts
+This function call per 5 seconds.
+Check the BTC(defined in config) balance and if balance is the greater than 0, update account balance in firebase.
+Check the this account transaction history from the block when created account to latest block.
+If found the received transaction, call update-wallet api and then call deposit callback api for creating notification and sending it through socket.
+Create deposit transaction in firebase.
+
+2) check expire
+- function: checkExpire
+This function check current accouns and if expired, move this account to expiredAccounts in firebase and call per 5 seconds too.
+Check the expire_date and if current date is the expire_date of account, move this account to expiredAccounts.
+And if this BTC balance of this account is the greater than zero, transfer this balance to master wallet.
+
+3) update expired accounts
+- function: updateExpiredAccounts
+This function call per 10 senconds and check the expired accounts.
+Workflow of this function is the same with updateAccounts function.
+
+4) check expired accounts
+- function: checkExpired
+This function call per 10 seconds too and recollect account's balances to master wallet.
+Workflow of this function is the similar with checkExpire function.

@@ -1,0 +1,16 @@
+{
+	"name": "module-bitcoin",
+	"script": "app.js",
+	"env_development": {
+		"NODE_ENV": "development"
+	},
+	"env_onprem": {
+		"NODE_ENV": "onprem"
+	},
+	"env_staging": {
+		"NODE_ENV": "staging"
+	},
+	"env_production": {
+		"NODE_ENV": "production"
+	}
+}

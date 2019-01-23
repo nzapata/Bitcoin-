@@ -1,0 +1,315 @@
+openapi: 3.0.
+info:
+  title: Cryptocurrency Module API
+  description: Defines minimum generic routes a module must support
+  version: "1.0.0"
+  contact:
+    email: "dev@strokentokens.com"
+
+paths:
+  /:
+    get:
+      description: Public information about this module
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Currency"
+  /transfer:
+    get:
+      tags:
+        - internal
+      description: View all transfer transactions under the current authorized user (Transactions between master wallets and deposit addresses)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transfer_Transaction"
+    post:
+      tags:
+        - internal
+      description: Submit a new transfer transaction to the blockchain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: string
+                deposit_address:
+                  type: string
+                master_wallet:
+                  type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer_Transaction"
+  /transfer/{transaction_id}:
+    get:
+      tags:
+        - internal
+      description: View the current status of a transfer transaction
+      parameters:
+        - in: path
+          name: transaction_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transfer_Transaction"
+  /deposit:
+    get:
+      description: View all deposit transactions under the current authorized user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Deposit_Transaction"
+  /deposit/{transaction_guid}:
+    get:
+      description: View the current status of a transfer transaction
+      parameters:
+        - in: path
+          name: transaction_guid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deposit_Transaction"
+  /deposit/address:
+    post:
+      description: Create a new deposit address on the blockchain and monitor it
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callback_url:
+                  type: string
+                  format: url
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
+  /deposit/address/{address_guid}:
+    get:
+      description: View the current balance of a deposit address
+      parameters:
+        - in: path
+          name: address_guid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: string
+                  public_key:
+                    type: string
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Deposit_Transaction"
+  /deposit/address/{address_guid}/log:
+    get:
+      description: View all deposit transactions under the specified address
+      parameters:
+        - in: path
+          name: address_guid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Deposit_Transaction"
+  /withdrawal:
+    get:
+      description: View all withdrawal transactions under the current authorized user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Withdrawal_Transaction"
+    post:
+      description: Submit a new withdrawal transaction to the blockchain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callback_url:
+                  type: string
+                amount:
+                  type: string
+                receiver:
+                  type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Withdrawal_Transaction"
+  /withdrawal/{transaction_guid}:
+    get:
+      description: View the current status of a withdrawal transaction
+      parameters:
+        - in: path
+          name: transaction_guid
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Withdrawal_Transaction"
+
+components:
+  schemas:
+    Currency:
+      type: object
+      description: A supported currency (crypto module)
+      properties:
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: integer
+        url:
+          type: string
+    Master_Wallet:
+      type: object
+      description: Stores the currency for all transactions performed
+      properties:
+        master_wallet_guid:
+          type: string
+        public_key:
+          type: string
+        private_key:
+          type: string
+        balance:
+          type: string
+        threshold:
+          type: string
+    Address:
+      type: object
+      description: An on-chain generated address (wallet)
+      properties:
+        address_guid:
+          type: string
+          format: uuid
+        expiration_date:
+          type: string
+          format: date
+        balance:
+          type: string
+        public_key:
+          type: string
+        callback_url:
+          type: string
+          format: url
+    Withdrawal_Transaction:
+      type: object
+      properties:
+        transaction_guid:
+          type: string
+        chain_transaction_key:
+          type: string
+        chain_explorer_url:
+          type: string
+        amount:
+          type: string
+        master_wallet:
+          type: string
+        receiver:
+          type: string
+        status:
+          type: string
+        callback_url:
+          type: string
+          format: url
+    Deposit_Transaction:
+      type: object
+      properties:
+        transaction_guid:
+          type: string
+        chain_transaction_key:
+          type: string
+        chain_explorer_url:
+          type: string
+        amount:
+          type: string
+        deposit_address:
+          type: string
+        external_address:
+          type: string
+        status:
+          type: string
+        callback_url:
+          type: string
+          format: url
+    Transfer_Transaction:
+      type: object
+      properties:
+        transaction_guid:
+          type: string
+        amount:
+          type: string
+        deposit_address:
+          type: string
+        master_wallet:
+          type: string
+        status:
+          type: string

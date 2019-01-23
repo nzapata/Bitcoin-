@@ -1,0 +1,32 @@
+{
+  "name": "stroken-bitcoin-node",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "mocha --timeout 20000"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "firebase": "^5.0.1",
+    "firebase-admin": "^5.12.0",
+    "https": "^1.0.0",
+    "json-rpc2": "^1.0.2",
+    "log": "^1.4.0",
+    "moment": "^2.22.1",
+    "moment-timer": "^1.2.3",
+    "mongoose": "^5.1.0",
+    "node-os-utils": "^1.0.7",
+    "nodemon": "^1.18.4",
+    "querystring": "^0.2.0",
+    "request": "^2.88.0",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nock": "^10.0.1",
+    "nyc": "^13.1.0"
+  }
+}
