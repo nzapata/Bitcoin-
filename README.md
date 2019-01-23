@@ -7,8 +7,8 @@ https://degreesofzero.com/article/installing-bitcoind-on-ubuntu.html
 
 ### bitcoin.conf
 ```
-rpcuser=stoken
-rpcpassword=stoken
+rpcuser=test
+rpcpassword=test
 rpcport=8332
 server=1
 daemon=1
